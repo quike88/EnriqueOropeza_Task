@@ -7,6 +7,9 @@ public class InventoryManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int inventorySize = 20;
 
+    [Header("Dependencies")]
+    [SerializeField] private CharacterVisualManager visualManager;
+
     [Header("Inventory State")]
     [SerializeField] private List<InventorySlotData> inventorySlots = new List<InventorySlotData>();
 
@@ -23,6 +26,11 @@ public class InventoryManager : MonoBehaviour
     public event Action OnInventoryUpdated;
 
     private void Awake() => InitializeInventory();
+
+    private void Start()
+    {
+        RefreshAllVisuals();
+    }
 
     private void InitializeInventory()
     {
@@ -72,6 +80,33 @@ public class InventoryManager : MonoBehaviour
         target.count = tempCount;
 
         OnInventoryUpdated?.Invoke();
+
+        UpdateVisualIfEquipment(source);
+        UpdateVisualIfEquipment(target);
+    }
+
+    private void UpdateVisualIfEquipment(InventorySlotData slot)
+    {
+        if (visualManager == null) return;
+
+        if (slot == weaponSlot) visualManager.UpdateVisual(ItemType.Weapon, slot.item);
+        else if (slot == shieldSlot) visualManager.UpdateVisual(ItemType.Shield, slot.item);
+        else if (slot == helmetSlot) visualManager.UpdateVisual(ItemType.Helmet, slot.item);
+        else if (slot == chestSlot) visualManager.UpdateVisual(ItemType.Chest, slot.item);
+        else if (slot == pauldronsSlot) visualManager.UpdateVisual(ItemType.Pauldrons, slot.item);
+        else if (slot == elbowPadsSlot) visualManager.UpdateVisual(ItemType.ElbowPads, slot.item);
+        else if (slot == kneePadsSlot) visualManager.UpdateVisual(ItemType.KneePads, slot.item);
+    }
+
+    private void RefreshAllVisuals()
+    {
+        UpdateVisualIfEquipment(weaponSlot);
+        UpdateVisualIfEquipment(shieldSlot);
+        UpdateVisualIfEquipment(helmetSlot);
+        UpdateVisualIfEquipment(chestSlot);
+        UpdateVisualIfEquipment(pauldronsSlot);
+        UpdateVisualIfEquipment(elbowPadsSlot);
+        UpdateVisualIfEquipment(kneePadsSlot);
     }
 
     public List<InventorySlotData> GetInventorySlots() => inventorySlots;

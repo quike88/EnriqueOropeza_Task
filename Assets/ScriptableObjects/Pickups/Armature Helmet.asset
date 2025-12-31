@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0209f6025fbedf84a99a7f5b27271f23, type: 3}
-  m_Name: Sword
+  m_Name: Armature Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Sword
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  description: A biiiig sword
-  itemType: 1
+  itemName: Armor Helmet
+  icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  description: It would have increased your defense by +3, but we don't have a system
+    for that yet.
+  itemType: 3
   isStackable: 0
+  visualID: Helmet
