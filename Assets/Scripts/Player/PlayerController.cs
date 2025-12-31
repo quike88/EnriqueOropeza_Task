@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float gravity = -9.81f;
 
+    [Header("Interaction Settings")]
+    [SerializeField] private float interactionRange = 2f;
+    [SerializeField] private LayerMask interactableLayer;
+
     [Header("References")]
     [SerializeField] private Animator animator;
 
@@ -38,6 +42,14 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            PerformInteraction();
+        }
     }
 
     #endregion
@@ -71,6 +83,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void PerformInteraction()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, interactionRange, interactableLayer);
+        Debug.Log($"Found {colliders.Length} interactable(s) within range.");
+        
+        foreach (var collider in colliders)
+        {
+            IInteractable interactable = collider.GetComponent<IInteractable>();
+            if (interactable != null)
+            {
+                interactable.Interact();
+                break;
+            }
+        }
+    }
+
     private void ApplyGravity()
     {
         if (characterController.isGrounded && verticalVelocity.y < 0)
@@ -83,5 +111,11 @@ public class PlayerController : MonoBehaviour
         }
 
         characterController.Move(verticalVelocity * Time.deltaTime);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRange);
     }
 }
