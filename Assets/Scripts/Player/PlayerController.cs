@@ -86,7 +86,6 @@ public class PlayerController : MonoBehaviour
     private void PerformInteraction()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, interactionRange, interactableLayer);
-        Debug.Log($"Found {colliders.Length} interactable(s) within range.");
         
         foreach (var collider in colliders)
         {

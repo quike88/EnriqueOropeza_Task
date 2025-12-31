@@ -27,7 +27,6 @@ public class ItemInteractable : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        // Billboard effect for the prompt
         if (isPlayerInRange && promptRoot != null && promptRoot.activeSelf)
         {
             promptRoot.transform.rotation = Camera.main.transform.rotation;
@@ -36,16 +35,21 @@ public class ItemInteractable : MonoBehaviour, IInteractable
 
     public string GetInteractionPrompt()
     {
-        return itemData != null ? $"Pick up {itemData.itemName}" : "Pick up item";
+        return  $"Press E to pick up {itemData.itemName}";
     }
 
     public void Interact()
     {
         if (inventoryManager != null && itemData != null)
         {
-            inventoryManager.AddItem(itemData);
-
-            Destroy(gameObject);
+            if (inventoryManager.AddItem(itemData))
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log("Inventory Full! Cannot pick up item.");
+            }
         }
     }
 

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HealthPotion
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Health Potion
-  icon: {fileID: 0}
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   description: Heal 20pts
   isStackable: 1
