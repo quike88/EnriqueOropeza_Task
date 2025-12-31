@@ -7,21 +7,28 @@ public class InventoryManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int inventorySize = 20;
 
-    [Header("State")]
-    [SerializeField] private List<InventorySlotData> slots = new List<InventorySlotData>();
+    [Header("Inventory State")]
+    [SerializeField] private List<InventorySlotData> inventorySlots = new List<InventorySlotData>();
+
+    [Header("Equipment Slots")]
+    [SerializeField] private InventorySlotData weaponSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData shieldSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData helmetSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData chestSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData pauldronsSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData elbowPadsSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData kneePadsSlot = new InventorySlotData();
+    [SerializeField] private InventorySlotData quickSlot = new InventorySlotData();
 
     public event Action OnInventoryUpdated;
 
-    private void Awake()
-    {
-        InitializeInventory();
-    }
+    private void Awake() => InitializeInventory();
 
     private void InitializeInventory()
     {
         for (int i = 0; i < inventorySize; i++)
         {
-            slots.Add(new InventorySlotData());
+            inventorySlots.Add(new InventorySlotData());
         }
     }
 
@@ -29,7 +36,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (item.isStackable)
         {
-            foreach (var slot in slots)
+            foreach (var slot in inventorySlots)
             {
                 if (slot.item == item)
                 {
@@ -39,7 +46,8 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
-        foreach (var slot in slots)
+
+        foreach (var slot in inventorySlots)
         {
             if (slot.item == null)
             {
@@ -49,19 +57,32 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
-    public void SwapSlots(int indexA, int indexB)
+    public void SwapSlots(InventorySlotData source, InventorySlotData target)
     {
-        InventorySlotData temp = slots[indexA];
-        slots[indexA] = slots[indexB];
-        slots[indexB] = temp;
+        ItemData tempItem = source.item;
+        int tempCount = source.count;
+
+        source.item = target.item;
+        source.count = target.count;
+
+        target.item = tempItem;
+        target.count = tempCount;
+
         OnInventoryUpdated?.Invoke();
     }
 
-    public List<InventorySlotData> GetSlots() => slots;
+    public List<InventorySlotData> GetInventorySlots() => inventorySlots;
+    public InventorySlotData GetWeaponSlot() => weaponSlot;
+    public InventorySlotData GetShieldSlot() => shieldSlot;
+    public InventorySlotData GetHelmetSlot() => helmetSlot;
+    public InventorySlotData GetChestSlot() => chestSlot;
+    public InventorySlotData GetPauldronsSlot() => pauldronsSlot;
+    public InventorySlotData GetElbowPadsSlot() => elbowPadsSlot;
+    public InventorySlotData GetKneePadsSlot() => kneePadsSlot;
+    public InventorySlotData GetQuickSlot() => quickSlot;
 }
 
 [Serializable]

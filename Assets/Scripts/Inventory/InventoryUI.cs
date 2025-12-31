@@ -8,26 +8,32 @@ public class InventoryUI : MonoBehaviour
     [Header("Dependencies")]
     [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private GameObject slotPrefab;
-    [SerializeField] private Transform gridParent;
-    [SerializeField] private Image dragIcon;
     [SerializeField] private TooltipUI tooltip;
 
-    [Header("Panels")]
+    [Header("Containers")]
     [SerializeField] private GameObject inventoryContent;
+    [SerializeField] private Transform gridParent;
+
+    [Header("Equipment Slots UI")]
+    [SerializeField] private InventorySlotUI weaponSlotUI;
+    [SerializeField] private InventorySlotUI shieldSlotUI;
+    [SerializeField] private InventorySlotUI helmetSlotUI;
+    [SerializeField] private InventorySlotUI chestSlotUI;
+    [SerializeField] private InventorySlotUI pauldronsSlotUI;
+    [SerializeField] private InventorySlotUI elbowPadsUI;
+    [SerializeField] private InventorySlotUI kneePadsUI;
+    [SerializeField] private InventorySlotUI quickSlotUI;
+
+    [Header("Drag Visuals")]
+    [SerializeField] private Image dragIcon;
 
     private List<InventorySlotUI> uiSlots = new List<InventorySlotUI>();
-    private int currentlyDraggedIndex = -1;
     private bool isInventoryOpen = false;
 
     private void Start()
     {
         inventoryManager.OnInventoryUpdated += RefreshUI;
-
-        if (dragIcon != null)
-        {
-            dragIcon.gameObject.SetActive(false);
-            dragIcon.raycastTarget = false;
-        }
+        if (dragIcon != null) dragIcon.raycastTarget = false;
 
         InitializeUI();
         CloseInventory();
@@ -38,39 +44,48 @@ public class InventoryUI : MonoBehaviour
         foreach (Transform child in gridParent) Destroy(child.gameObject);
         uiSlots.Clear();
 
-        var slotsData = inventoryManager.GetSlots();
-        for (int i = 0; i < slotsData.Count; i++)
+        var invSlotsData = inventoryManager.GetInventorySlots();
+        foreach (var data in invSlotsData)
         {
             GameObject obj = Instantiate(slotPrefab, gridParent);
             InventorySlotUI slotUI = obj.GetComponent<InventorySlotUI>();
             uiSlots.Add(slotUI);
-            slotUI.Setup(i, this, slotsData[i]);
+            slotUI.Setup(this, data);
         }
+        RefreshUI();
     }
 
     public void RefreshUI()
     {
-        var slotsData = inventoryManager.GetSlots();
+        var invSlotsData = inventoryManager.GetInventorySlots();
         for (int i = 0; i < uiSlots.Count; i++)
         {
-            uiSlots[i].Setup(i, this, slotsData[i]);
+            uiSlots[i].Setup(this, invSlotsData[i]);
         }
+
+        UpdateSpecialSlot(weaponSlotUI, inventoryManager.GetWeaponSlot());
+        UpdateSpecialSlot(shieldSlotUI, inventoryManager.GetShieldSlot());
+        UpdateSpecialSlot(helmetSlotUI, inventoryManager.GetHelmetSlot());
+        UpdateSpecialSlot(chestSlotUI, inventoryManager.GetChestSlot());
+        UpdateSpecialSlot(pauldronsSlotUI, inventoryManager.GetPauldronsSlot());
+        UpdateSpecialSlot(elbowPadsUI, inventoryManager.GetElbowPadsSlot());
+        UpdateSpecialSlot(kneePadsUI, inventoryManager.GetKneePadsSlot());
+        UpdateSpecialSlot(quickSlotUI, inventoryManager.GetQuickSlot());
     }
 
-    #region Input Callbacks
+    private void UpdateSpecialSlot(InventorySlotUI ui, InventorySlotData data)
+    {
+        if (ui != null) ui.Setup(this, data);
+    }
 
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            if (isInventoryOpen)
-                CloseInventory();
-            else
-                OpenInventory();
+            if (isInventoryOpen) CloseInventory();
+            else OpenInventory();
         }
     }
-
-    #endregion
 
     private void OpenInventory()
     {
@@ -82,47 +97,28 @@ public class InventoryUI : MonoBehaviour
     {
         isInventoryOpen = false;
         inventoryContent.SetActive(false);
-        HideTooltip();
-        ClearDraggedItem();
+        tooltip?.Hide();
+        dragIcon.gameObject.SetActive(false);
     }
 
-    public void ShowTooltip(ItemData item)
-    {
-        if (tooltip != null) tooltip.Show(item);
-    }
+    public void ShowTooltip(ItemData item) => tooltip?.Show(item);
+    public void HideTooltip() => tooltip?.Hide();
 
-    public void HideTooltip()
+    public void SetDraggedItem(InventorySlotUI source, InventorySlotData data)
     {
-        if (tooltip != null) tooltip.Hide();
-    }
-
-    public void SetDraggedItem(int index)
-    {
-        var slots = inventoryManager.GetSlots();
-        if (index < 0 || index >= slots.Count || slots[index].item == null) return;
-
-        currentlyDraggedIndex = index;
-        dragIcon.sprite = slots[index].item.icon;
+        dragIcon.sprite = data.item.icon;
         dragIcon.gameObject.SetActive(true);
     }
 
     public void UpdateDraggedItemPosition(Vector2 position)
     {
-        if (dragIcon.gameObject.activeSelf)
-        {
-            dragIcon.transform.position = position;
-        }
+        if (dragIcon.gameObject.activeSelf) dragIcon.transform.position = position;
     }
 
-    public void ClearDraggedItem()
-    {
-        currentlyDraggedIndex = -1;
-        dragIcon.gameObject.SetActive(false);
-    }
+    public void ClearDraggedItem() => dragIcon.gameObject.SetActive(false);
 
-    public void RequestSwap(int originIndex, int targetIndex)
+    public void RequestSwap(InventorySlotData source, InventorySlotData target)
     {
-        if (originIndex == targetIndex) return;
-        inventoryManager.SwapSlots(originIndex, targetIndex);
+        inventoryManager.SwapSlots(source, target);
     }
 }

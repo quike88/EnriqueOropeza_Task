@@ -5,16 +5,19 @@ using UnityEngine.EventSystems;
 
 public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("UI Elements")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
 
-    private int slotIndex;
+    [Header("Slot Settings")]
+    [SerializeField] private ItemType allowedType = ItemType.General;
+    [SerializeField] private bool isSpecialSlot = false;
+
     private InventoryUI inventoryUI;
     private InventorySlotData slotData;
-    private bool isDragging = false;
-    public void Setup(int index, InventoryUI ui, InventorySlotData data)
+
+    public void Setup(InventoryUI ui, InventorySlotData data)
     {
-        slotIndex = index;
         inventoryUI = ui;
         slotData = data;
 
@@ -33,10 +36,8 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (slotData != null && slotData.item != null && !isDragging)
-        {
+        if (slotData != null && slotData.item != null)
             inventoryUI.ShowTooltip(slotData.item);
-        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -48,10 +49,9 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (slotData.item == null) return;
 
-        inventoryUI.HideTooltip(); 
-        inventoryUI.SetDraggedItem(slotIndex);
+        inventoryUI.HideTooltip();
+        inventoryUI.SetDraggedItem(this, slotData);
         iconImage.raycastTarget = false;
-        isDragging = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -64,15 +64,25 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         inventoryUI.ClearDraggedItem();
         iconImage.raycastTarget = true;
-        isDragging = false;
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        InventorySlotUI droppedSlot = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
-        if (droppedSlot != null)
+        InventorySlotUI sourceSlot = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
+        if (sourceSlot == null) return;
+
+        if (this.isSpecialSlot && sourceSlot.slotData.item != null)
         {
-            inventoryUI.RequestSwap(droppedSlot.slotIndex, this.slotIndex);
+            if (sourceSlot.slotData.item.itemType != this.allowedType) return;
         }
+
+        // Validation when moving FROM a special slot to a general slot
+        if (sourceSlot.isSpecialSlot && this.slotData.item != null)
+        {
+            if (this.slotData.item.itemType != sourceSlot.allowedType) return;
+        }
+        Debug.Log($"Source Item Type: {sourceSlot.slotData.item.itemType}, Allowed Type: {this.allowedType}");
+
+        inventoryUI.RequestSwap(sourceSlot.slotData, this.slotData);
     }
 }
