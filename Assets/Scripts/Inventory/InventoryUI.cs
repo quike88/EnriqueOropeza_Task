@@ -36,7 +36,6 @@ public class InventoryUI : MonoBehaviour
         if (dragIcon != null) dragIcon.raycastTarget = false;
 
         InitializeUI();
-        CloseInventory();
     }
 
     private void InitializeUI()
@@ -99,6 +98,8 @@ public class InventoryUI : MonoBehaviour
         inventoryContent.SetActive(false);
         tooltip?.Hide();
         dragIcon.gameObject.SetActive(false);
+
+        if (inventoryManager != null) inventoryManager.SaveInventory();
     }
 
     public void ShowTooltip(ItemData item) => tooltip?.Show(item);

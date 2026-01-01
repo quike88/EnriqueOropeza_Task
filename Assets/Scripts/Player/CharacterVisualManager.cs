@@ -49,11 +49,6 @@ public class CharacterVisualManager : MonoBehaviour
 
         if (item == null || item.visualPrefab == null)
         {
-            // Default appearance if no item is equipped
-            if (group.entries.Count > 0 && group.entries[0].meshObject != null)
-            {
-                SpawnItem(type, group, group.entries[0].meshObject);
-            }
             return;
         }
 

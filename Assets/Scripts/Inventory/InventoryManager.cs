@@ -6,6 +6,7 @@ public class InventoryManager : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private int inventorySize = 20;
+    [SerializeField] private string saveKey = "PlayerInventorySave";
 
     [Header("Dependencies")]
     [SerializeField] private CharacterVisualManager visualManager;
@@ -25,20 +26,29 @@ public class InventoryManager : MonoBehaviour
 
     public event Action OnInventoryUpdated;
 
-    private void Awake() => InitializeInventory();
+    private void Awake()
+    {
+        InitializeInventory();
+    }
 
     private void Start()
     {
+        LoadInventory();
         RefreshAllVisuals();
     }
 
     private void InitializeInventory()
     {
-        for (int i = 0; i < inventorySize; i++)
+        if (inventorySlots.Count == 0)
         {
-            inventorySlots.Add(new InventorySlotData());
+            for (int i = 0; i < inventorySize; i++)
+            {
+                inventorySlots.Add(new InventorySlotData());
+            }
         }
     }
+
+    #region Inventory Logic
 
     public bool AddItem(ItemData item)
     {
@@ -49,7 +59,7 @@ public class InventoryManager : MonoBehaviour
                 if (slot.item == item)
                 {
                     slot.count++;
-                    OnInventoryUpdated?.Invoke();
+                    NotifyUpdate();
                     return true;
                 }
             }
@@ -61,7 +71,7 @@ public class InventoryManager : MonoBehaviour
             {
                 slot.item = item;
                 slot.count = 1;
-                OnInventoryUpdated?.Invoke();
+                NotifyUpdate();
                 return true;
             }
         }
@@ -79,11 +89,121 @@ public class InventoryManager : MonoBehaviour
         target.item = tempItem;
         target.count = tempCount;
 
-        OnInventoryUpdated?.Invoke();
+        NotifyUpdate();
 
         UpdateVisualIfEquipment(source);
         UpdateVisualIfEquipment(target);
     }
+
+    private void NotifyUpdate()
+    {
+        OnInventoryUpdated?.Invoke();
+        SaveInventory();
+    }
+
+    #endregion
+
+    #region Save and Load System
+
+    public void SaveInventory()
+    {
+        try
+        {
+            InventorySaveData data = new InventorySaveData();
+
+            foreach (var slot in inventorySlots)
+            {
+                data.inventorySlots.Add(new SlotSaveData(slot));
+            }
+
+            data.weapon = new SlotSaveData(weaponSlot);
+            data.shield = new SlotSaveData(shieldSlot);
+            data.helmet = new SlotSaveData(helmetSlot);
+            data.chest = new SlotSaveData(chestSlot);
+            data.pauldrons = new SlotSaveData(pauldronsSlot);
+            data.elbowPads = new SlotSaveData(elbowPadsSlot);
+            data.kneePads = new SlotSaveData(kneePadsSlot);
+            data.quickSlot = new SlotSaveData(quickSlot);
+
+            string json = JsonUtility.ToJson(data);
+            PlayerPrefs.SetString(saveKey, json);
+            PlayerPrefs.Save();
+
+            Debug.Log("<color=green>Inventory System:</color> Saved successfully.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"<color=red>Inventory System:</color> Error saving: {e.Message}");
+        }
+    }
+
+    public void LoadInventory()
+    {
+        if (!PlayerPrefs.HasKey(saveKey))
+        {
+            Debug.Log("<color=yellow>Inventory System:</color> No save file found.");
+            return;
+        }
+
+        try
+        {
+            string json = PlayerPrefs.GetString(saveKey);
+            InventorySaveData data = JsonUtility.FromJson<InventorySaveData>(json);
+
+            // Load general slots
+            for (int i = 0; i < inventorySlots.Count; i++)
+            {
+                if (i < data.inventorySlots.Count)
+                    ApplySaveDataToSlot(inventorySlots[i], data.inventorySlots[i]);
+            }
+
+            // Load equipment
+            ApplySaveDataToSlot(weaponSlot, data.weapon);
+            ApplySaveDataToSlot(shieldSlot, data.shield);
+            ApplySaveDataToSlot(helmetSlot, data.helmet);
+            ApplySaveDataToSlot(chestSlot, data.chest);
+            ApplySaveDataToSlot(pauldronsSlot, data.pauldrons);
+            ApplySaveDataToSlot(elbowPadsSlot, data.elbowPads);
+            ApplySaveDataToSlot(kneePadsSlot, data.kneePads);
+            ApplySaveDataToSlot(quickSlot, data.quickSlot);
+
+            OnInventoryUpdated?.Invoke();
+            Debug.Log("<color=green>Inventory System:</color> Loaded successfully.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"<color=red>Inventory System:</color> Error loading: {e.Message}");
+        }
+    }
+
+    private void ApplySaveDataToSlot(InventorySlotData slot, SlotSaveData saveData)
+    {
+        if (saveData == null || string.IsNullOrEmpty(saveData.itemName))
+        {
+            slot.item = null;
+            slot.count = 0;
+            return;
+        }
+
+        // Search for the ItemData in Assets/Resources/Items/
+        ItemData loadedItem = Resources.Load<ItemData>("Items/" + saveData.itemName);
+
+        if (loadedItem != null)
+        {
+            slot.item = loadedItem;
+            slot.count = saveData.count;
+        }
+        else
+        {
+            Debug.LogWarning($"<color=orange>Inventory System:</color> Could not find item '{saveData.itemName}' in Resources/Items/. Make sure the asset name matches exactly.");
+            slot.item = null;
+            slot.count = 0;
+        }
+    }
+
+    #endregion
+
+    #region Visuals and Getters
 
     private void UpdateVisualIfEquipment(InventorySlotData slot)
     {
@@ -98,7 +218,7 @@ public class InventoryManager : MonoBehaviour
         else if (slot == kneePadsSlot) visualManager.UpdateVisual(ItemType.KneePads, slot.item);
     }
 
-    private void RefreshAllVisuals()
+    public void RefreshAllVisuals()
     {
         UpdateVisualIfEquipment(weaponSlot);
         UpdateVisualIfEquipment(shieldSlot);
@@ -118,6 +238,8 @@ public class InventoryManager : MonoBehaviour
     public InventorySlotData GetElbowPadsSlot() => elbowPadsSlot;
     public InventorySlotData GetKneePadsSlot() => kneePadsSlot;
     public InventorySlotData GetQuickSlot() => quickSlot;
+
+    #endregion
 }
 
 [Serializable]
@@ -125,4 +247,39 @@ public class InventorySlotData
 {
     public ItemData item;
     public int count;
+}
+
+[Serializable]
+public class SlotSaveData
+{
+    public string itemName;
+    public int count;
+
+    public SlotSaveData(InventorySlotData slot)
+    {
+        if (slot.item != null)
+        {
+            itemName = slot.item.name;
+            count = slot.count;
+        }
+        else
+        {
+            itemName = "";
+            count = 0;
+        }
+    }
+}
+
+[Serializable]
+public class InventorySaveData
+{
+    public List<SlotSaveData> inventorySlots = new List<SlotSaveData>();
+    public SlotSaveData weapon;
+    public SlotSaveData shield;
+    public SlotSaveData helmet;
+    public SlotSaveData chest;
+    public SlotSaveData pauldrons;
+    public SlotSaveData elbowPads;
+    public SlotSaveData kneePads;
+    public SlotSaveData quickSlot;
 }
