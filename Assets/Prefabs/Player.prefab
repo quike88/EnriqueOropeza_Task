@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 739186858536327234}
   - component: {fileID: 5235630440478775316}
   - component: {fileID: 3102924060991825639}
+  - component: {fileID: 8500902714913411571}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -140,7 +141,19 @@ MonoBehaviour:
     m_ActionId: 852140f2-7766-474d-8707-702459ba45f3
     m_ActionName: 'Player/Interact[/Keyboard/e]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 739186858536327234}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnUseItem
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 27c5f898-bc57-4ee1-8800-db469aca5fe3
     m_ActionName: 'Player/Crouch[/Keyboard/c]'
   - m_PersistentCalls:
@@ -241,6 +254,7 @@ MonoBehaviour:
     m_Bits: 64
   animator: {fileID: 4801329663786909255}
   animationHandler: {fileID: 3921697750994755209}
+  inventoryManager: {fileID: 5235630440478775316}
 --- !u!114 &5235630440478775316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +270,7 @@ MonoBehaviour:
   inventorySize: 25
   saveKey: PlayerInventorySave
   visualManager: {fileID: 289939287178753143}
+  playerHealth: {fileID: 8500902714913411571}
   inventorySlots: []
   weaponSlot:
     item: {fileID: 0}
@@ -308,6 +323,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8500902714913411571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583855121267112219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b677aec74653e04b8df88bbba6d0f65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 200
+  currentHealth: 0
 --- !u!1 &4738025146009032453
 GameObject:
   m_ObjectHideFlags: 0
