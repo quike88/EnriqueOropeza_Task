@@ -19,4 +19,4 @@ MonoBehaviour:
   isStackable: 0
   itemValue: 10
   visualID: 
-  visualPrefab: {fileID: 1586301124448702, guid: 181c5c49a962f96468635ea191e01184, type: 3}
+  visualPrefab: {fileID: 5486888781739270626, guid: 128c690dca5725e47a6c666bebb78f07, type: 3}

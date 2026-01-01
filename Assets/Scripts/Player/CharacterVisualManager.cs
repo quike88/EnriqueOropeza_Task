@@ -89,4 +89,12 @@ public class CharacterVisualManager : MonoBehaviour
             group.entries[0].meshObject.SetActive(true);
         }
     }
+    public Weapon GetEquippedWeapon()
+    {
+        if (spawnedItems.TryGetValue(ItemType.Weapon, out GameObject weapon))
+        {
+            return weapon.GetComponent<Weapon>();
+        }
+        return null;
+    }
 }

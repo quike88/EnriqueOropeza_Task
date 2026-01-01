@@ -15,11 +15,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Animator animator;
+    [SerializeField] private AnimationHandler animationHandler;
 
     private CharacterController characterController;
     private Vector2 moveInput;
     private Vector3 verticalVelocity;
     private Transform cameraTransform;
+
+    private bool isAttacking = false;
+    private int currentAttack = 0;
 
     private void Awake()
     {
@@ -34,10 +38,13 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         ApplyGravity();
-        HandleMovement();
+        if (!isAttacking)
+        {
+            HandleMovement();
+        }
     }
 
-    #region Input Callbacks (Invoke Unity Events)
+    #region Input Callbacks
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -51,7 +58,13 @@ public class PlayerController : MonoBehaviour
             PerformInteraction();
         }
     }
-
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isAttacking)
+        {
+            StartAttack();
+        }
+    }
     #endregion
 
     private void HandleMovement()
@@ -110,6 +123,25 @@ public class PlayerController : MonoBehaviour
         }
 
         characterController.Move(verticalVelocity * Time.deltaTime);
+    }
+    private void StartAttack()
+    {
+        isAttacking = true;
+
+        currentAttack = Random.Range(1, 4);
+        if (animationHandler != null)
+        {
+            animationHandler.TriggerAttack(currentAttack);
+        }
+    }
+    public void SetIsAttacking(bool state)
+    {
+        isAttacking = state;
+
+        if (!state && moveInput.magnitude < 0.1f && animator != null)
+        {
+            animator.SetFloat("Speed", 0);
+        }
     }
 
     private void OnDrawGizmosSelected()
