@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 739186858536327234}
   - component: {fileID: 5235630440478775316}
   - component: {fileID: 3102924060991825639}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2525,6 +2525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595bc9a1a5187e940b8ac85fed77330f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationHandler
+  isPlayer: 1
 --- !u!1 &4895865833051953125
 GameObject:
   m_ObjectHideFlags: 0

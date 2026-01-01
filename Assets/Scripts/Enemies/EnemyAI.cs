@@ -25,16 +25,18 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private Weapon weapon;
 
     private CharacterController characterController;
+    private Health health;
     private Transform playerTransform;
     private bool isAttacking = false;
     private Vector3 verticalVelocity;
     private Quaternion initialRotation;
     private float lastAttackTime = 0f;
-
+    private bool canMove = true;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         initialRotation = transform.rotation;
+        health = GetComponent<Health>();
     }
 
     private void Start()
@@ -42,10 +44,32 @@ public class EnemyAI : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) playerTransform = player.transform;
     }
+    private void OnEnable()
+    {
+        if (health != null)
+        {
+            health.OnDeath += OnDeath;
+        }
+    }
+    private void OnDisable()
+    {
+        if (health != null)
+        {
+            health.OnDeath -= OnDeath;
+        }
+    }
+    private void OnDeath()
+    {
+        canMove = false;
+        characterController.height = 0.5f;
+        characterController.radius = 0.3f;
+        Destroy(this.gameObject, 10f);
+    }
 
     private void Update()
     {
-        if (playerTransform == null) return;
+        ApplyGravity();
+        if (playerTransform == null || !canMove) return;
 
         switch (currentState)
         {
@@ -60,7 +84,6 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        ApplyGravity();
     }
     private void ApplyGravity()
     {
@@ -153,6 +176,10 @@ public class EnemyAI : MonoBehaviour
         {
             lastAttackTime = Time.time;
         }
+    }
+    public void SetCanMove(bool state)
+    {
+        canMove = state;
     }
     public Weapon GetEquippedWeapon()
     {

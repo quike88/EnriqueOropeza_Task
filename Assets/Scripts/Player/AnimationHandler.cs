@@ -7,10 +7,12 @@ public class AnimationHandler : MonoBehaviour
     private PlayerController playerController;
     private EnemyAI enemyAI;
     private CharacterVisualManager characterVisualManager;
+    private Health health;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        health = GetComponentInParent<Health>();
         if (isPlayer)
         {
             playerController = GetComponentInParent<PlayerController>();
@@ -21,6 +23,53 @@ public class AnimationHandler : MonoBehaviour
             enemyAI = GetComponentInParent<EnemyAI>();
         }
 
+    }
+    private void OnEnable()
+    {
+        if (health != null)
+        {
+            health.OnDeath += OnDeath;
+            health.takeDamage += OnTakeDamage;
+        }
+    }
+    private void OnDisable()
+    {
+        if (health != null)
+        {
+            health.OnDeath -= OnDeath;
+            health.takeDamage -= OnTakeDamage;
+        }
+    }
+    private void OnDeath()
+    {
+        animator.SetTrigger("Die");
+        DisableHitCollider();
+    }
+    private void OnTakeDamage()
+    {
+        animator.SetTrigger("Hit");
+        if (isPlayer)
+        {
+            DisableHitCollider();
+            playerController.SetIsAttacking(false);
+            playerController.SetCanMove(false);
+        }
+        else
+        {
+            enemyAI.SetCanMove(false);
+        }
+    }
+    public void OnHitAnimationFinished()
+    {
+        if (isPlayer)
+        {
+            playerController.SetCanMove(true);
+        }
+        else
+        {
+            enemyAI.SetCanMove(true);
+        }
+        OnAttackFinished();
     }
 
     public void TriggerAttack(int attackIndex)

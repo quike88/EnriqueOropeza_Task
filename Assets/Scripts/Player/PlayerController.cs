@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isAttacking = false;
     private int currentAttack = 0;
-
+    private bool canMove = true;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         ApplyGravity();
-        if (!isAttacking)
+        if (!isAttacking && canMove)
         {
             HandleMovement();
         }
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed && !isAttacking)
+        if (context.performed && !isAttacking && canMove)
         {
             StartAttack();
         }
@@ -142,6 +142,10 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetFloat("Speed", 0);
         }
+    }
+    public void SetCanMove(bool state)
+    {
+        canMove = state;
     }
 
     private void OnDrawGizmosSelected()

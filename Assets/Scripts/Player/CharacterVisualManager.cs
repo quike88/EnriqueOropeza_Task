@@ -52,12 +52,17 @@ public class CharacterVisualManager : MonoBehaviour
             return;
         }
 
-        SpawnItem(type, group, item.visualPrefab);
+        SpawnItem(type, group, item.visualPrefab, item.itemValue);
     }
 
-    private void SpawnItem(ItemType type, VisualGroup group, GameObject prefab)
+    private void SpawnItem(ItemType type, VisualGroup group, GameObject prefab, float damageValue)
     {
         GameObject newVisual = Instantiate(prefab, group.socket);
+        Weapon weaponComponent = newVisual.GetComponent<Weapon>();
+        if (weaponComponent != null)
+        {
+            weaponComponent.Setup(damageValue, this.transform.parent.gameObject);
+        }
         newVisual.transform.localPosition = Vector3.zero;
         newVisual.transform.localRotation = Quaternion.identity;
         spawnedItems[type] = newVisual;
