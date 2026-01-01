@@ -164,7 +164,6 @@ public class InventoryManager : MonoBehaviour
             ApplySaveDataToSlot(quickSlot, data.quickSlot);
 
             OnInventoryUpdated?.Invoke();
-            Debug.Log("<color=green>Inventory System:</color> Loaded successfully.");
         }
         catch (Exception e)
         {
