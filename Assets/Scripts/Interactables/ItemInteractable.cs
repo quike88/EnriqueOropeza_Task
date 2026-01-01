@@ -24,6 +24,14 @@ public class ItemInteractable : MonoBehaviour, IInteractable
             promptText.text = GetInteractionPrompt();
         }
     }
+    public void SetItemData(ItemData newItemData)
+    {
+        itemData = newItemData;
+        if (promptText != null && itemData != null)
+        {
+            promptText.text = GetInteractionPrompt();
+        }
+    }
 
     private void Update()
     {

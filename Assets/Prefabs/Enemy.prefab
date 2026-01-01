@@ -66324,6 +66324,7 @@ GameObject:
   - component: {fileID: 1481024986698260277}
   - component: {fileID: 7479362340340083324}
   - component: {fileID: 3121230905711443344}
+  - component: {fileID: 6103564642415815725}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -66386,7 +66387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b677aec74653e04b8df88bbba6d0f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 100
+  maxHealth: 30
   currentHealth: 0
 --- !u!143 &7479362340340083324
 CharacterController:
@@ -66439,6 +66440,32 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   weapon: {fileID: 4575565149108184085}
+--- !u!114 &6103564642415815725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8357994751795918631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b3148be1c3ffd40a89507f34bddffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootSpawner
+  lootTable:
+  - item: {fileID: 11400000, guid: e3543d2bad83e07449cf72410719e560, type: 2}
+    dropChance: 50
+  - item: {fileID: 11400000, guid: 59c9e1d04c7a5f845aa8affeb1f66f98, type: 2}
+    dropChance: 10
+  - item: {fileID: 11400000, guid: 3d0b658cc08df30458ec61ad94b92222, type: 2}
+    dropChance: 10
+  - item: {fileID: 11400000, guid: c5defddc212fed744bb2800629519efb, type: 2}
+    dropChance: 10
+  - item: {fileID: 11400000, guid: 2c0008f78a36a3b478dd4c8073b3711f, type: 2}
+    dropChance: 10
+  itemPickupPrefab: {fileID: 1739691672916872509, guid: e14adbb74e9d7004595fb2b1230ea150, type: 3}
+  spawnHeightOffset: 0.5
+  spreadRange: 1
 --- !u!1 &8360494536338945981
 GameObject:
   m_ObjectHideFlags: 0
