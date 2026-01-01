@@ -12,6 +12,7 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [Header("Slot Settings")]
     [SerializeField] private ItemType allowedType = ItemType.General;
     [SerializeField] private bool isSpecialSlot = false;
+    [SerializeField] private bool isTrashSlot = false;
 
     private InventoryUI inventoryUI;
     private InventorySlotData slotData;
@@ -20,7 +21,7 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         inventoryUI = ui;
         slotData = data;
-
+        if (isTrashSlot) return;
         if (slotData != null && slotData.item != null)
         {
             iconImage.sprite = slotData.item.icon;
@@ -70,13 +71,17 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         InventorySlotUI sourceSlot = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
         if (sourceSlot == null) return;
+        if (this.isTrashSlot)
+        {
+            inventoryUI.RequestRemove(sourceSlot.slotData);
+            return;
+        }
 
         if (this.isSpecialSlot && sourceSlot.slotData.item != null)
         {
             if (sourceSlot.slotData.item.itemType != this.allowedType) return;
         }
 
-        // Validation when moving FROM a special slot to a general slot
         if (sourceSlot.isSpecialSlot && this.slotData.item != null)
         {
             if (this.slotData.item.itemType != sourceSlot.allowedType) return;

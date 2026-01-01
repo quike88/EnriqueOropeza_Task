@@ -27,12 +27,10 @@ public class CharacterVisualManager : MonoBehaviour
         VisualGroup group = equipmentVisuals.Find(g => g.type == type);
         if (group == null) return;
 
-        // 1. Logic for Socketed Items (Weapons/Shields)
         if (group.socket != null)
         {
             HandleSocketItem(type, group, item);
         }
-        // 2. Logic for Armor (Mesh Toggle)
         else
         {
             HandleStaticMesh(group, item?.visualID);

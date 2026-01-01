@@ -10,6 +10,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Dependencies")]
     [SerializeField] private CharacterVisualManager visualManager;
+    [SerializeField] private Health playerHealth;
 
     [Header("Inventory State")]
     [SerializeField] private List<InventorySlotData> inventorySlots = new List<InventorySlotData>();
@@ -80,21 +81,54 @@ public class InventoryManager : MonoBehaviour
 
     public void SwapSlots(InventorySlotData source, InventorySlotData target)
     {
-        ItemData tempItem = source.item;
-        int tempCount = source.count;
+        if (source.item != null && target.item != null && source.item == target.item && source.item.isStackable)
+        {
+            target.count += source.count;
+            source.item = null;
+            source.count = 0;
+        }
+        else
+        {
+            ItemData tempItem = source.item;
+            int tempCount = source.count;
 
-        source.item = target.item;
-        source.count = target.count;
+            source.item = target.item;
+            source.count = target.count;
 
-        target.item = tempItem;
-        target.count = tempCount;
+            target.item = tempItem;
+            target.count = tempCount;
+        }
 
         NotifyUpdate();
 
         UpdateVisualIfEquipment(source);
         UpdateVisualIfEquipment(target);
     }
+    public void RemoveItem(InventorySlotData slot)
+    {
+        slot.item = null;
+        slot.count = 0;
+        NotifyUpdate();
+        UpdateVisualIfEquipment(slot);
+    }
+    public void UseQuickSlotItem()
+    {
+        if (quickSlot.item != null && quickSlot.item.itemType == ItemType.Consumable)
+        {
+            if (playerHealth != null && !playerHealth.IsDead())
+            {
+                playerHealth.Heal(quickSlot.item.itemValue);
+                quickSlot.count--;
 
+                if (quickSlot.count <= 0)
+                {
+                    quickSlot.item = null;
+                }
+
+                NotifyUpdate();
+            }
+        }
+    }
     private void NotifyUpdate()
     {
         OnInventoryUpdated?.Invoke();

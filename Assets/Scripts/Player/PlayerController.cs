@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private AnimationHandler animationHandler;
+    [SerializeField] private InventoryManager inventoryManager;
 
     private CharacterController characterController;
     private Vector2 moveInput;
@@ -63,6 +64,13 @@ public class PlayerController : MonoBehaviour
         if (context.performed && !isAttacking && canMove)
         {
             StartAttack();
+        }
+    }
+    public void OnUseItem (InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            inventoryManager.UseQuickSlotItem();
         }
     }
     #endregion

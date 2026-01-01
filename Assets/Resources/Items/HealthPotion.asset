@@ -17,4 +17,6 @@ MonoBehaviour:
   description: Heal 20pts
   itemType: 8
   isStackable: 1
+  itemValue: 20
   visualID: 
+  visualPrefab: {fileID: 0}

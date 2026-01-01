@@ -23,6 +23,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private InventorySlotUI elbowPadsUI;
     [SerializeField] private InventorySlotUI kneePadsUI;
     [SerializeField] private InventorySlotUI quickSlotUI;
+    [SerializeField] private InventorySlotUI trashSlotUI;
 
     [Header("Drag Visuals")]
     [SerializeField] private Image dragIcon;
@@ -51,6 +52,7 @@ public class InventoryUI : MonoBehaviour
             uiSlots.Add(slotUI);
             slotUI.Setup(this, data);
         }
+        if (trashSlotUI != null) trashSlotUI.Setup(this, null);
         RefreshUI();
     }
 
@@ -76,7 +78,10 @@ public class InventoryUI : MonoBehaviour
     {
         if (ui != null) ui.Setup(this, data);
     }
-
+    public void RequestRemove(InventorySlotData data)
+    {
+        inventoryManager.RemoveItem(data);
+    }
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
         if (context.started)
