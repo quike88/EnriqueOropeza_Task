@@ -129,7 +129,6 @@ public class InventoryManager : MonoBehaviour
             PlayerPrefs.SetString(saveKey, json);
             PlayerPrefs.Save();
 
-            Debug.Log("<color=green>Inventory System:</color> Saved successfully.");
         }
         catch (Exception e)
         {
@@ -141,7 +140,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey(saveKey))
         {
-            Debug.Log("<color=yellow>Inventory System:</color> No save file found.");
             return;
         }
 
@@ -150,14 +148,12 @@ public class InventoryManager : MonoBehaviour
             string json = PlayerPrefs.GetString(saveKey);
             InventorySaveData data = JsonUtility.FromJson<InventorySaveData>(json);
 
-            // Load general slots
             for (int i = 0; i < inventorySlots.Count; i++)
             {
                 if (i < data.inventorySlots.Count)
                     ApplySaveDataToSlot(inventorySlots[i], data.inventorySlots[i]);
             }
 
-            // Load equipment
             ApplySaveDataToSlot(weaponSlot, data.weapon);
             ApplySaveDataToSlot(shieldSlot, data.shield);
             ApplySaveDataToSlot(helmetSlot, data.helmet);
@@ -185,7 +181,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        // Search for the ItemData in Assets/Resources/Items/
         ItemData loadedItem = Resources.Load<ItemData>("Items/" + saveData.itemName);
 
         if (loadedItem != null)
@@ -195,7 +190,6 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"<color=orange>Inventory System:</color> Could not find item '{saveData.itemName}' in Resources/Items/. Make sure the asset name matches exactly.");
             slot.item = null;
             slot.count = 0;
         }
