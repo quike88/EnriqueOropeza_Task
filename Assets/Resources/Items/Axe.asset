@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0209f6025fbedf84a99a7f5b27271f23, type: 3}
   m_Name: Axe
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Axe
+  itemName: Big Axe
   icon: {fileID: 21300000, guid: 6358c62b484454de39a6c22799c77355, type: 3}
-  description: A biiiig axe
+  description: '30 damage
+
+    Slow
+
+    Heavy'
   itemType: 1
   isStackable: 0
-  itemValue: 10
+  itemValue: 30
   visualID: 
   visualPrefab: {fileID: 5486888781739270626, guid: 128c690dca5725e47a6c666bebb78f07, type: 3}

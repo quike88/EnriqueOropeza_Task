@@ -58,6 +58,10 @@ public class AnimationHandler : MonoBehaviour
             AudioClip clip = dieSounds[Random.Range(0, dieSounds.Length)];
             AudioManager.Instance.PlaySound(clip, transform.position, 1f, Random.Range(0.8f, 1.2f));
         }
+        if (isPlayer)
+        {
+            GameManager.Instance.NotifyPlayerDied();
+        }
         animator.SetTrigger("Die");
         DisableHitCollider();
     }
@@ -78,8 +82,12 @@ public class AnimationHandler : MonoBehaviour
         }
         else
         {
-            enemyAI.SetCanMove(false);
-            enemyAI.StartChasing();
+            if (enemyAI != null)
+            {
+                enemyAI.SetCanMove(false);
+                enemyAI.StartChasing();
+
+            }
         }
     }
     public void OnHitAnimationFinished()
@@ -90,7 +98,10 @@ public class AnimationHandler : MonoBehaviour
         }
         else
         {
-            enemyAI.SetCanMove(true);
+            if (enemyAI != null)
+            {
+                enemyAI.SetCanMove(true);
+            }
         }
         OnAttackFinished();
     }

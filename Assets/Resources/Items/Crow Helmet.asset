@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0209f6025fbedf84a99a7f5b27271f23, type: 3}
   m_Name: Crow Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Crow Helmet
+  itemName: Plague Doctor Mask
   icon: {fileID: 21300000, guid: b5e0e0ec391174ed485c99b626e1ec9d, type: 3}
   description: Look cool, but doesnt protect to much
   itemType: 3

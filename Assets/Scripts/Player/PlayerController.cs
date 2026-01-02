@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private AnimationHandler animationHandler;
     [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private CinemachineInputAxisController cameraInputController;
 
     private CharacterController characterController;
     private Vector2 moveInput;
@@ -172,9 +174,22 @@ public class PlayerController : MonoBehaviour
     public void SetCanMove(bool state)
     {
         canMove = state;
-        if (!canMove)
+        if (cameraInputController != null)
+        {
+            cameraInputController.enabled = state;
+        }
+
+        if (!state)
         {
             animator.SetFloat("Speed", 0);
+            moveInput = Vector2.zero;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
