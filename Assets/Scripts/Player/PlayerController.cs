@@ -172,6 +172,10 @@ public class PlayerController : MonoBehaviour
     public void SetCanMove(bool state)
     {
         canMove = state;
+        if (!canMove)
+        {
+            animator.SetFloat("Speed", 0);
+        }
     }
 
     private void OnDrawGizmosSelected()

@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class AnimationHandler : MonoBehaviour
@@ -14,7 +16,10 @@ public class AnimationHandler : MonoBehaviour
     [SerializeField] private AudioClip[] footstepSounds;
     [SerializeField] private AudioClip[] takeDamageSounds;
     [SerializeField] private AudioClip[] dieSounds;
-
+    [Header("Hit effects")]
+    [SerializeField] private CinemachineImpulseSource impulseSource;
+    [SerializeField] private float hitStopDuration = 0.07f;
+    [SerializeField] private float hitStopScale = 0.01f;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -64,6 +69,7 @@ public class AnimationHandler : MonoBehaviour
             AudioClip clip = takeDamageSounds[Random.Range(0, takeDamageSounds.Length)];
             AudioManager.Instance.PlaySound(clip, transform.position, 1f, Random.Range(0.8f, 1.2f));
         }
+        TriggerHitEffects();
         if (isPlayer)
         {
             DisableHitCollider();
@@ -132,5 +138,21 @@ public class AnimationHandler : MonoBehaviour
 
         AudioClip clip = footstepSounds[Random.Range(0, footstepSounds.Length)];
         AudioManager.Instance.PlaySound(clip, transform.position, 0.6f, Random.Range(0.8f, 1.2f));
+    }
+    public void TriggerHitEffects()
+    {
+        if (impulseSource != null)
+        {
+            impulseSource.GenerateImpulse();
+        }
+        StartCoroutine(DoHitStop());
+    }
+
+    private IEnumerator DoHitStop()
+    {
+        float originalScale = Time.timeScale;
+        Time.timeScale = hitStopScale;
+        yield return new WaitForSecondsRealtime(hitStopDuration);
+        Time.timeScale = originalScale;
     }
 }

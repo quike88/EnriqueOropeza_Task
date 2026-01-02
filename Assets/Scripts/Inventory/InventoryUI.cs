@@ -9,6 +9,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private TooltipUI tooltip;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Containers")]
     [SerializeField] private GameObject inventoryContent;
@@ -38,6 +39,8 @@ public class InventoryUI : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         inventoryManager.OnInventoryUpdated += RefreshUI;
         if (dragIcon != null) dragIcon.raycastTarget = false;
 
@@ -102,8 +105,13 @@ public class InventoryUI : MonoBehaviour
 
     private void OpenInventory()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         isInventoryOpen = true;
         inventoryContent.SetActive(true);
+        playerController.SetCanMove(false);
+
         if (openInventorySound != null)
         {
             AudioManager.Instance.PlaySound(openInventorySound, Camera.main.transform.position, 0.5f);
@@ -112,8 +120,12 @@ public class InventoryUI : MonoBehaviour
 
     private void CloseInventory()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         isInventoryOpen = false;
         inventoryContent.SetActive(false);
+        playerController.SetCanMove(true);
         tooltip?.Hide();
         dragIcon.gameObject.SetActive(false);
 
