@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Plague Doctor Mask
   icon: {fileID: 21300000, guid: b5e0e0ec391174ed485c99b626e1ec9d, type: 3}
-  description: Look cool, but doesnt protect to much
+  description: It looks good, but it doesn't offer much protection.
   itemType: 3
   isStackable: 0
   itemValue: 0
