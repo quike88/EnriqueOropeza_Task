@@ -73,6 +73,8 @@ MonoBehaviour:
   itemData: {fileID: 11400000, guid: e3543d2bad83e07449cf72410719e560, type: 2}
   promptRoot: {fileID: 8049899910845038383}
   promptText: {fileID: 5670205685390357087}
+  pickupSound: {fileID: 8300000, guid: 4cb7d6c864cf07d4d98608f9c3a1ee6a, type: 3}
+  spawnSound: {fileID: 8300000, guid: 69c0a7b02ea23b947aa79b7c51ae9ebf, type: 3}
 --- !u!135 &3227646035220853880
 SphereCollider:
   m_ObjectHideFlags: 0

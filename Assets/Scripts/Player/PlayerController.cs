@@ -65,7 +65,6 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
-        Debug.Log(inventoryManager.GetWeaponSlot().item);
         if (context.performed && !isAttacking && canMove && inventoryManager.GetWeaponSlot().item != null)
         {
             StartAttack();

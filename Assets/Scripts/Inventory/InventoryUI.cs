@@ -27,6 +27,11 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Drag Visuals")]
     [SerializeField] private Image dragIcon;
+    [Header("Sounds")]
+    [SerializeField] private AudioClip openInventorySound;
+    [SerializeField] private AudioClip closeInventorySound;
+    [SerializeField] private AudioClip dropItemSound;
+    [SerializeField] private AudioClip removeSound;
 
     private List<InventorySlotUI> uiSlots = new List<InventorySlotUI>();
     private bool isInventoryOpen = false;
@@ -81,6 +86,10 @@ public class InventoryUI : MonoBehaviour
     public void RequestRemove(InventorySlotData data)
     {
         inventoryManager.RemoveItem(data);
+        if (removeSound != null)
+        {
+            AudioManager.Instance.PlaySound(removeSound, Camera.main.transform.position, 0.5f);
+        }
     }
     public void OnToggleInventory(InputAction.CallbackContext context)
     {
@@ -95,6 +104,10 @@ public class InventoryUI : MonoBehaviour
     {
         isInventoryOpen = true;
         inventoryContent.SetActive(true);
+        if (openInventorySound != null)
+        {
+            AudioManager.Instance.PlaySound(openInventorySound, Camera.main.transform.position, 0.5f);
+        }
     }
 
     private void CloseInventory()
@@ -105,6 +118,10 @@ public class InventoryUI : MonoBehaviour
         dragIcon.gameObject.SetActive(false);
 
         if (inventoryManager != null) inventoryManager.SaveInventory();
+        if (closeInventorySound != null)
+        {
+            AudioManager.Instance.PlaySound(closeInventorySound, Camera.main.transform.position);
+        }
     }
 
     public void ShowTooltip(ItemData item) => tooltip?.Show(item);
@@ -126,5 +143,9 @@ public class InventoryUI : MonoBehaviour
     public void RequestSwap(InventorySlotData source, InventorySlotData target)
     {
         inventoryManager.SwapSlots(source, target);
+        if (dropItemSound != null)
+        {
+            AudioManager.Instance.PlaySound(dropItemSound, Camera.main.transform.position, 0.5f);
+        }
     }
 }

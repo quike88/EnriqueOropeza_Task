@@ -199,7 +199,7 @@ public class EnemyAI : MonoBehaviour
     private bool CanSeePlayer()
     {
         float distance = Vector3.Distance(transform.position, playerTransform.position);
-        Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z) + Vector3.up;
+        Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z) + Vector3.up;
         if (distance > detectionRange) return false;
 
         float[] angles = { 0, -detectionAngle, detectionAngle };
@@ -223,7 +223,7 @@ public class EnemyAI : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z) + Vector3.up;
+        Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z) + Vector3.up;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 

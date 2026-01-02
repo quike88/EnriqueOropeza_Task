@@ -9,6 +9,9 @@ public class ItemInteractable : MonoBehaviour, IInteractable
     [Header("UI References - Prompt")]
     [SerializeField] private GameObject promptRoot;
     [SerializeField] private TextMeshProUGUI promptText;
+    [Header("Sounds")]
+    [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private AudioClip spawnSound;
 
     private InventoryManager inventoryManager;
     private bool isPlayerInRange = false;
@@ -26,6 +29,10 @@ public class ItemInteractable : MonoBehaviour, IInteractable
     }
     public void SetItemData(ItemData newItemData)
     {
+        if (spawnSound != null)
+        {
+            AudioManager.Instance.PlaySound(spawnSound, transform.position);
+        }
         itemData = newItemData;
         if (promptText != null && itemData != null)
         {
@@ -52,6 +59,10 @@ public class ItemInteractable : MonoBehaviour, IInteractable
         {
             if (inventoryManager.AddItem(itemData))
             {
+                if (pickupSound != null)
+                {
+                    AudioManager.Instance.PlaySound(pickupSound, transform.position);
+                }
                 Destroy(gameObject);
             }
             else

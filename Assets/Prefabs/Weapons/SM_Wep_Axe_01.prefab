@@ -105,6 +105,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   hitCollider: {fileID: 6776708492349782315}
   damage: 25
+  owner: {fileID: 0}
+  hitSounds:
+  - {fileID: 8300000, guid: 1023ebf4e4c2f1e4aa4802995423e539, type: 3}
+  - {fileID: 8300000, guid: 7efcc0ce16a931143974eda305aec486, type: 3}
+  - {fileID: 8300000, guid: 42bd541cbc6899b4381c754009574d4d, type: 3}
+  hitVFXPrefab: {fileID: 1245799321066455419, guid: af05cc0768ba3eb439a23c4cde286253, type: 3}
 --- !u!65 &6776708492349782315
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     [SerializeField] private GameObject dialogueRoot;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI nameText;
+    [Header("Sounds")]
+    [SerializeField] private AudioClip dialogueSound;
 
     [Header("Reward Settings")]
     [SerializeField] private GameObject itemPickupPrefab;
@@ -102,6 +104,10 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     {
         if (dialogueText != null)
         {
+            if (dialogueSound != null)
+            {
+                AudioManager.Instance.PlaySound(dialogueSound, transform.position);
+            }
             dialogueText.text = dialogueLines[currentLineIndex];
         }
     }

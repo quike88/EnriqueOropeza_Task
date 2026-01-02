@@ -6,6 +6,9 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip healSound;
+
     public event Action OnDeath;
     public event Action takeDamage;
     public event Action<float, float> OnHealthChanged; // currentHealth, maxHealth
@@ -44,6 +47,10 @@ public class Health : MonoBehaviour, IDamageable
     public void Heal(float amount)
     {
         if (isDead) return;
+        if (healSound != null)
+        {
+            AudioManager.Instance.PlaySound(healSound, transform.position, 0.8f);
+        }
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);

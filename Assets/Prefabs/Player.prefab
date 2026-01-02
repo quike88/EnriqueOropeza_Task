@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5235630440478775316}
   - component: {fileID: 3102924060991825639}
   - component: {fileID: 8500902714913411571}
+  - component: {fileID: 1270979444463668666}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -58,7 +59,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 1.8
   m_Radius: 0.4
-  m_SlopeLimit: 45
+  m_SlopeLimit: 50
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -157,7 +158,19 @@ MonoBehaviour:
     m_ActionId: 27c5f898-bc57-4ee1-8800-db469aca5fe3
     m_ActionName: 'Player/Crouch[/Keyboard/c]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 739186858536327234}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f1ba0d36-48eb-4cd5-b651-1c94a6531f70
     m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
@@ -248,6 +261,7 @@ MonoBehaviour:
   moveSpeed: 5
   rotationSpeed: 10
   gravity: -9.81
+  jumpHeight: 1.2
   interactionRange: 2
   interactableLayer:
     serializedVersion: 2
@@ -335,8 +349,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b677aec74653e04b8df88bbba6d0f65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 200
+  maxHealth: 100
   currentHealth: 0
+--- !u!114 &1270979444463668666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583855121267112219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb545be36d761b04392b083d95ec916e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthUI
+  playerHealth: {fileID: 8500902714913411571}
+  healthSlider: {fileID: 0}
+  healthText: {fileID: 0}
+  lerpSpeed: 5
 --- !u!1 &4738025146009032453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,6 +2585,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationHandler
   isPlayer: 1
+  weaponWhoosh: {fileID: 8300000, guid: 8d8625d0c11b4a04293d943892b131fb, type: 3}
+  footstepSounds:
+  - {fileID: 8300000, guid: 4853a9e7be818264ba3abd66e1f1b98d, type: 3}
+  - {fileID: 8300000, guid: dd0594a031ec3b94ab7e50af3a1df274, type: 3}
+  - {fileID: 8300000, guid: acb533a6ccd310245a8263814022293a, type: 3}
+  takeDamageSounds:
+  - {fileID: 8300000, guid: b9bdcc877c77a924989eb20f2ec9074e, type: 3}
+  - {fileID: 8300000, guid: 337ee432227aa734da4510db53c931c8, type: 3}
+  - {fileID: 8300000, guid: fff4ffa6141ddb942be206b78bd1a2bc, type: 3}
+  - {fileID: 8300000, guid: a6895a7b8b47f8849a04463d966fb20f, type: 3}
 --- !u!1 &4895865833051953125
 GameObject:
   m_ObjectHideFlags: 0

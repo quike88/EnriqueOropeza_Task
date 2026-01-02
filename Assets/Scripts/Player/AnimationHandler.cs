@@ -9,6 +9,12 @@ public class AnimationHandler : MonoBehaviour
     private CharacterVisualManager characterVisualManager;
     private Health health;
 
+    [Header("Sounds")]
+    [SerializeField] private AudioClip weaponWhoosh;
+    [SerializeField] private AudioClip[] footstepSounds;
+    [SerializeField] private AudioClip[] takeDamageSounds;
+    [SerializeField] private AudioClip[] dieSounds;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -42,12 +48,22 @@ public class AnimationHandler : MonoBehaviour
     }
     private void OnDeath()
     {
+        if (dieSounds.Length > 0)
+        {
+            AudioClip clip = dieSounds[Random.Range(0, dieSounds.Length)];
+            AudioManager.Instance.PlaySound(clip, transform.position, 1f, Random.Range(0.8f, 1.2f));
+        }
         animator.SetTrigger("Die");
         DisableHitCollider();
     }
     private void OnTakeDamage()
     {
         animator.SetTrigger("Hit");
+        if (takeDamageSounds.Length > 0)
+        {
+            AudioClip clip = takeDamageSounds[Random.Range(0, takeDamageSounds.Length)];
+            AudioManager.Instance.PlaySound(clip, transform.position, 1f, Random.Range(0.8f, 1.2f));
+        }
         if (isPlayer)
         {
             DisableHitCollider();
@@ -95,6 +111,7 @@ public class AnimationHandler : MonoBehaviour
 
     public void EnableHitCollider()
     {
+        AudioManager.Instance.PlaySound(weaponWhoosh, transform.position, 1f, Random.Range(0.9f, 1.1f));
         Weapon weapon = isPlayer ? characterVisualManager.GetEquippedWeapon() : enemyAI.GetEquippedWeapon();
         if (weapon != null)
         {
@@ -108,5 +125,12 @@ public class AnimationHandler : MonoBehaviour
         {
             weapon.DisableHitCollider();
         }
+    }
+    public void PlayFootstepSound()
+    {
+        if (footstepSounds.Length == 0) return;
+
+        AudioClip clip = footstepSounds[Random.Range(0, footstepSounds.Length)];
+        AudioManager.Instance.PlaySound(clip, transform.position, 0.6f, Random.Range(0.8f, 1.2f));
     }
 }

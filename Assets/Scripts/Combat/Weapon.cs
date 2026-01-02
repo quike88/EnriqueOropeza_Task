@@ -8,6 +8,10 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float damage = 25f;
     [SerializeField] private GameObject owner;
 
+    [Header("Hit effects")]
+    [SerializeField] private AudioClip[] hitSounds;
+    [SerializeField] private GameObject hitVFXPrefab;
+
     // to prevent multiple damage applications to the same entity in one hit
     private List<IDamageable> damagedEntities = new List<IDamageable>();
 
@@ -40,7 +44,12 @@ public class Weapon : MonoBehaviour
         IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null && !damagedEntities.Contains(damageable))
         {
-            Debug.Log($"Weapon hit {other.name}, applying {damage} damage.");
+            AudioManager.Instance.PlaySound(hitSounds[Random.Range(0, hitSounds.Length)], other.ClosestPoint(transform.position));
+            if (hitVFXPrefab != null)
+            {
+               GameObject hitVFX = Instantiate(hitVFXPrefab, other.ClosestPoint(transform.position), Quaternion.identity);
+               Destroy(hitVFX, 2f);
+            }
             damageable.TakeDamage(damage);
             damagedEntities.Add(damageable);
         }

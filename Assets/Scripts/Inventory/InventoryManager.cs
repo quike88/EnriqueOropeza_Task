@@ -115,7 +115,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (quickSlot.item != null && quickSlot.item.itemType == ItemType.Consumable)
         {
-            if (playerHealth != null && !playerHealth.IsDead())
+            if (playerHealth != null && !playerHealth.IsDead() && (playerHealth.currentHealthValue() < playerHealth.maxHealthValue()))
             {
                 playerHealth.Heal(quickSlot.item.itemValue);
                 quickSlot.count--;
