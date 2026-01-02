@@ -18,9 +18,16 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI nameText;
 
+    [Header("Reward Settings")]
+    [SerializeField] private GameObject itemPickupPrefab;
+    [SerializeField] private ItemData rewardItem;
+    [SerializeField] private bool giveRewardOnce = true;
+    [SerializeField] private Transform spawnPoint;
+
     private int currentLineIndex = 0;
     private bool isTalking = false;
     private bool isPlayerInRange = false;
+    private bool hasGivenReward = false;
 
     private void Start()
     {
@@ -37,10 +44,12 @@ public class NPCInteractable : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        // Billboarding para el prompt y el diálogo
         if (isPlayerInRange && promptRoot != null && promptRoot.activeSelf)
         {
             promptRoot.transform.rotation = Camera.main.transform.rotation;
         }
+
         if (isTalking && dialogueRoot != null && dialogueRoot.activeSelf)
         {
             dialogueRoot.transform.rotation = Camera.main.transform.rotation;
@@ -103,6 +112,32 @@ public class NPCInteractable : MonoBehaviour, IInteractable
         if (dialogueRoot) dialogueRoot.SetActive(false);
 
         if (isPlayerInRange && promptRoot) promptRoot.SetActive(true);
+
+        // Lógica de spawn de recompensa
+        HandleReward();
+    }
+
+    private void HandleReward()
+    {
+        if (rewardItem != null && itemPickupPrefab != null)
+        {
+            if (!giveRewardOnce || !hasGivenReward)
+            {
+                SpawnReward();
+                hasGivenReward = true;
+            }
+        }
+    }
+
+    private void SpawnReward()
+    {
+        GameObject droppedItem = Instantiate(itemPickupPrefab, spawnPoint.position, Quaternion.identity);
+
+        ItemInteractable interactable = droppedItem.GetComponent<ItemInteractable>();
+        if (interactable != null)
+        {
+            interactable.SetItemData(rewardItem);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

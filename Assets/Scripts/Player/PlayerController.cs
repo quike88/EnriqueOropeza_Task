@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float gravity = -9.81f;
 
+    [Header("Jump Settings")]
+    [SerializeField] private float jumpHeight = 1.2f;
+    private bool isJumpPressed = false;
+
     [Header("Interaction Settings")]
     [SerializeField] private float interactionRange = 2f;
     [SerializeField] private LayerMask interactableLayer;
@@ -61,7 +65,8 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed && !isAttacking && canMove)
+        Debug.Log(inventoryManager.GetWeaponSlot().item);
+        if (context.performed && !isAttacking && canMove && inventoryManager.GetWeaponSlot().item != null)
         {
             StartAttack();
         }
@@ -71,6 +76,13 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             inventoryManager.UseQuickSlotItem();
+        }
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed && characterController.isGrounded && !isAttacking && canMove)
+        {
+            //isJumpPressed = true;
         }
     }
     #endregion
@@ -125,12 +137,19 @@ public class PlayerController : MonoBehaviour
         {
             verticalVelocity.y = -2f;
         }
-        else
+
+        if (isJumpPressed)
         {
-            verticalVelocity.y += gravity * Time.deltaTime;
+            verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            isJumpPressed = false;
+
+            if (animator != null) animator.SetTrigger("Jump");
         }
 
+        verticalVelocity.y += gravity * Time.deltaTime;
+
         characterController.Move(verticalVelocity * Time.deltaTime);
+        animator.SetBool("IsGrounded", characterController.isGrounded);
     }
     private void StartAttack()
     {

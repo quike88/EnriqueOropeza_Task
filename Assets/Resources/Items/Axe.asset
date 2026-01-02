@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Axe
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Axe
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 6358c62b484454de39a6c22799c77355, type: 3}
   description: A biiiig axe
   itemType: 1
   isStackable: 0

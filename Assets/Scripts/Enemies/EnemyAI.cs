@@ -177,6 +177,13 @@ public class EnemyAI : MonoBehaviour
             lastAttackTime = Time.time;
         }
     }
+    public void StartChasing()
+    {
+        if (currentState == EnemyState.Idle)
+        {
+            currentState = EnemyState.Chasing;
+        }
+    }
     public void SetCanMove(bool state)
     {
         canMove = state;

@@ -57,6 +57,7 @@ public class AnimationHandler : MonoBehaviour
         else
         {
             enemyAI.SetCanMove(false);
+            enemyAI.StartChasing();
         }
     }
     public void OnHitAnimationFinished()

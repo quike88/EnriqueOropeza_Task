@@ -48,4 +48,6 @@ public class Health : MonoBehaviour, IDamageable
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
+    public float maxHealthValue() => maxHealth;
+    public float currentHealthValue() => currentHealth;
 }

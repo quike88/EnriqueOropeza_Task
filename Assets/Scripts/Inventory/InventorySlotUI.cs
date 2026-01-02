@@ -8,7 +8,8 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [Header("UI Elements")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
-
+    [SerializeField] private Image placeHolder;
+    [SerializeField] private Sprite placeholderSprite;
     [Header("Slot Settings")]
     [SerializeField] private ItemType allowedType = ItemType.General;
     [SerializeField] private bool isSpecialSlot = false;
@@ -16,6 +17,14 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private InventoryUI inventoryUI;
     private InventorySlotData slotData;
+
+    private void Start()
+    {
+        if (isSpecialSlot && placeHolder != null && placeholderSprite != null)
+        {
+            placeHolder.sprite = placeholderSprite;
+        }
+    }
 
     public void Setup(InventoryUI ui, InventorySlotData data)
     {
@@ -27,11 +36,13 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             iconImage.sprite = slotData.item.icon;
             iconImage.enabled = true;
             countText.text = slotData.count > 1 ? slotData.count.ToString() : "";
+            placeHolder.enabled = false;
         }
         else
         {
             iconImage.enabled = false;
             countText.text = "";
+            placeHolder.enabled = true;
         }
     }
 

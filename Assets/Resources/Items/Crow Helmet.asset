@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Crow Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Crow Helmet
-  icon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: b5e0e0ec391174ed485c99b626e1ec9d, type: 3}
   description: Look cool, but doesnt protect to much
   itemType: 3
   isStackable: 0
+  itemValue: 0
   visualID: Crow
+  visualPrefab: {fileID: 0}
